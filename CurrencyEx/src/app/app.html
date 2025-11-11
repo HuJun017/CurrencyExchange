@@ -5,14 +5,20 @@
   <p>Converti valute in tempo reale con i tassi più aggiornati</p>
 </header>
 
-<nav>
-  <a routerLink="/conversion" routerLinkActive="active">Convertitore</a> |
-  <a routerLink="/storico" routerLinkActive="active">Storico</a>
-</nav>
+<ul class="navbar-nav">
+  <li class="nav-item">
+    <a class="nav-link" routerLink="/conversion" routerLinkActive="active">Conversion</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" routerLink="/storico" routerLinkActive="active">Storico</a>
+  </li>
+</ul>
 
 <main>
   <router-outlet></router-outlet>
-</main>
+</main>3
+
+
 
 <footer>
   <p>© 2025 CurrencyEx — Tassi di cambio aggiornati ogni ora.</p>
