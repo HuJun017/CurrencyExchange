@@ -1,1 +1,43 @@
-<p>storico works!</p>
+<div>
+  <h2>Convertitore di Valute</h2>
+
+  <form (submit)="converti($event)">
+
+    <!-- Valuta di partenza -->
+    <div>
+      <label>Da:</label>
+      <select name="from" [(ngModel)]="valutaDa" (change)="caricaTassi()">
+        <option *ngFor="let v of valute" [value]="v">{{ v }}</option>
+      </select>
+    </div>
+
+    <!-- Valuta di arrivo -->
+    <div>
+      <label>A:</label>
+      <select name="to" [(ngModel)]="valutaA">
+        <option *ngFor="let v of valute" [value]="v">{{ v }}</option>
+      </select>
+    </div>
+
+    <!-- Importo -->
+    <div>
+      <label>Importo:</label>
+      <input type="number" name="amount" [(ngModel)]="amount" placeholder="0">
+    </div>
+
+    <!-- Data -->
+    <div>
+      <label>Data:</label>
+      <input type="date" name="date" [(ngModel)]="DataAnno" (change)="caricaTassi()">
+    </div>
+
+    <!--bottone conversione-->
+    <button type="submit">Converti</button>
+  </form>
+
+  <!-- RISULTATO -->
+  <div *ngIf="risultato !== null">
+    <h3>Risultato:</h3>
+    <p>{{ amountStatica }} {{ valutaDaStatica }} = {{ risultato }} {{ valutaAStatica }}</p>
+  </div>
+</div>
