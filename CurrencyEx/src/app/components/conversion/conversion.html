@@ -1,1 +1,54 @@
-<p>conversion works!</p>
+<div>
+  <h2>Convertitore di Valute</h2>
+
+  <form (submit)="converti($event)">
+
+    <!-- Valuta di partenza -->
+    <div>
+      <label>Da:</label>
+      <select name="from" [(ngModel)]="valutaDa" (change)="rimuoviValutaDaDaValuteA()">
+        <option *ngFor="let v of valute" [value]="v">{{ v }}</option>
+      </select>
+    </div>
+
+    <!-- Valute di arrivo con pulsante aggiungi -->
+    <div>
+      <label>A (valute di conversione):</label>
+      
+      <!-- Lista delle valute selezionate -->
+      <div *ngFor="let valuta of valutaA; let i = index" style="margin: 5px 0;">
+        <select [(ngModel)]="valutaA[i]" [name]="'valuta-' + i" (change)="controllaValute()">
+          <option *ngFor="let v of valute" [value]="v" [disabled]="(valutaA.includes(v) && valutaA[i] !== v) || v === valutaDa">
+            {{ v }}
+          </option>
+        </select>
+        <button type="button" (click)="rimuoviValuta(i)">Rimuovi</button>
+      </div>
+
+      <!-- Pulsante per aggiungere valuta -->
+      <button type="button" (click)="aggiungiValuta()" [disabled]="valutaA.length >= valute.length - 1">
+        + Aggiungi valuta
+      </button>
+    </div>
+
+    <!-- Importo -->
+    <div>
+      <label>Importo:</label>
+      <input type="number" name="amount" [(ngModel)]="amount" placeholder="0">
+    </div>
+
+    <!--bottone conversione-->
+    <button type="submit">Converti</button>
+  </form>
+
+  <!-- RISULTATO -->
+  <div *ngIf="risultato !== null">
+    <h3>Risultato:</h3>
+    <p>{{ amountStatica }} {{ valutaDaStatica }} equivale a:</p>
+    <ul>
+      <li *ngFor="let r of risultato">
+        {{ r.valore.toFixed(2) }} {{ r.valuta }}
+      </li>
+    </ul>
+  </div>
+</div>
