@@ -11,6 +11,8 @@ import { FormsModule } from '@angular/forms';
 })
 export class Storico {
 
+  oggi: string = new Date().toISOString().split('T')[0];
+  
   valute = [
     'AUD','BGN','BRL','CAD','CHF','CNY','CZK','DKK','EUR','GBP','HKD','HUF',
     'IDR','ILS','INR','ISK','JPY','KRW','MXN','MYR','NOK','NZD','PHP',

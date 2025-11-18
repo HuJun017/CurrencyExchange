@@ -1,54 +1,120 @@
-<div>
-  <h2>Convertitore di Valute</h2>
+<!-- conversion.component.html -->
 
-  <form (submit)="converti($event)">
-
-    <!-- Valuta di partenza -->
-    <div>
-      <label>Da:</label>
-      <select name="from" [(ngModel)]="valutaDa" (change)="rimuoviValutaDaDaValuteA()">
-        <option *ngFor="let v of valute" [value]="v">{{ v }}</option>
-      </select>
-    </div>
-
-    <!-- Valute di arrivo con pulsante aggiungi -->
-    <div>
-      <label>A (valute di conversione):</label>
+<div class="card">
+  <div class="card-header">
+    <h2 class="mb-0">
+      <i class="bi bi-arrow-left-right"></i>
+      Convertitore di Valute
+    </h2>
+  </div>
+  
+  <div class="card-body">
+    <form (submit)="converti($event)">
       
-      <!-- Lista delle valute selezionate -->
-      <div *ngFor="let valuta of valutaA; let i = index" style="margin: 5px 0;">
-        <select [(ngModel)]="valutaA[i]" [name]="'valuta-' + i" (change)="controllaValute()">
-          <option *ngFor="let v of valute" [value]="v" [disabled]="(valutaA.includes(v) && valutaA[i] !== v) || v === valutaDa">
+      <!-- Valuta di partenza -->
+      <div class="mb-4">
+        <label class="form-label">
+          <i class="bi bi-cash-coin text-primary"></i>
+          Valuta di partenza
+        </label>
+        <select 
+          class="form-select form-select-lg" 
+          name="from" 
+          [(ngModel)]="valutaDa" 
+          (change)="rimuoviValutaDaDaValuteA()">
+          <option *ngFor="let v of valute" [value]="v">
             {{ v }}
           </option>
         </select>
-        <button type="button" (click)="rimuoviValuta(i)">Rimuovi</button>
       </div>
 
-      <!-- Pulsante per aggiungere valuta -->
-      <button type="button" (click)="aggiungiValuta()" [disabled]="valutaA.length >= valute.length - 1">
-        + Aggiungi valuta
-      </button>
+      <!-- Importo -->
+      <div class="mb-4">
+        <label class="form-label">
+          <i class="bi bi-calculator text-success"></i>
+          Importo da convertire
+        </label>
+        <input 
+          type="number" 
+          class="form-control form-control-lg" 
+          name="amount" 
+          [(ngModel)]="amount" 
+          placeholder="Inserisci l'importo"
+          min="0"
+          step="0.01"
+          required>
+      </div>
+
+      <!-- Valute di destinazione -->
+      <div class="mb-4">
+        <label class="form-label">
+          <i class="bi bi-box-arrow-right text-info"></i>
+          Valute di conversione
+        </label>
+        
+        <!-- Lista delle valute selezionate -->
+        <div *ngFor="let valuta of valutaA; let i = index" class="currency-item">
+          <div class="flex-grow-1">
+            <select 
+              class="form-select" 
+              [(ngModel)]="valutaA[i]" 
+              [name]="'valuta-' + i" 
+              (change)="controllaValute()">
+              <option 
+                *ngFor="let v of valute" 
+                [value]="v" 
+                [disabled]="(valutaA.includes(v) && valutaA[i] !== v) || v === valutaDa">
+                {{ v }}
+              </option>
+            </select>
+          </div>
+          <button 
+            type="button" 
+            class="btn btn-danger btn-sm" 
+            (click)="rimuoviValuta(i)"
+            [disabled]="valutaA.length === 1">
+            <i class="bi bi-trash"></i>
+          </button>
+        </div>
+
+        <!-- Pulsante per aggiungere valuta -->
+        <button 
+          type="button" 
+          class="btn btn-outline-primary mt-3 w-100" 
+          (click)="aggiungiValuta()" 
+          [disabled]="valutaA.length >= valute.length - 1">
+          <i class="bi bi-plus-circle"></i>
+          Aggiungi altra valuta
+        </button>
+      </div>
+
+      <!-- Bottone conversione -->
+      <div class="d-grid">
+        <button type="submit" class="btn btn-primary btn-lg">
+          <i class="bi bi-arrow-repeat"></i>
+          Converti Ora
+        </button>
+      </div>
+    </form>
+
+    <!-- RISULTATO -->
+    <div *ngIf="risultato !== null" class="result-box">
+      <h3>
+        <i class="bi bi-check-circle-fill"></i>
+        Risultato della Conversione
+      </h3>
+      <p class="mb-3">
+        <strong class="result-value">{{ amountStatica }} {{ valutaDaStatica }}</strong>
+        <span class="text-muted"> equivale a:</span>
+      </p>
+      <ul class="list-unstyled">
+        <li *ngFor="let r of risultato" class="mb-2">
+          <div class="d-flex justify-content-between align-items-center p-3 bg-white rounded-3 border">
+            <span class="badge bg-primary">{{ r.valuta }}</span>
+            <strong class="fs-5 text-success">{{ r.valore.toFixed(2) }}</strong>
+          </div>
+        </li>
+      </ul>
     </div>
-
-    <!-- Importo -->
-    <div>
-      <label>Importo:</label>
-      <input type="number" name="amount" [(ngModel)]="amount" placeholder="0">
-    </div>
-
-    <!--bottone conversione-->
-    <button type="submit">Converti</button>
-  </form>
-
-  <!-- RISULTATO -->
-  <div *ngIf="risultato !== null">
-    <h3>Risultato:</h3>
-    <p>{{ amountStatica }} {{ valutaDaStatica }} equivale a:</p>
-    <ul>
-      <li *ngFor="let r of risultato">
-        {{ r.valore.toFixed(2) }} {{ r.valuta }}
-      </li>
-    </ul>
   </div>
 </div>
