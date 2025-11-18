@@ -78,6 +78,7 @@
           name="date" 
           [(ngModel)]="DataAnno" 
           (change)="caricaTassi()"
+          min = "1999-01-04"
           [max]="oggi"
           required>
         <small class="form-text text-muted">
