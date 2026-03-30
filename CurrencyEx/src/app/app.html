@@ -1,39 +1,41 @@
-<!-- app.component.html -->
+<!-- app.html -->
 
 <header>
   <div class="container">
-    <h1>💱 Currency Exchange</h1>
-    <p>Converti valute in tempo reale con i tassi più aggiornati</p>
+    <div class="header-title">&#x1f4b1; Currency Exchange</div>
+    <div class="header-subtitle">Converti valute in tempo reale con i tassi più aggiornati</div>
   </div>
 </header>
 
-<!-- BARRA DI NAVIGAZIONE -->
-<nav>
-  <ul class="navbar-nav">
-    <li class="nav-item">
+<nav class="main-nav">
+  <ul class="nav-list">
+    <li>
       <a class="nav-link" routerLink="/conversion" routerLinkActive="active">
         <i class="bi bi-currency-exchange"></i> Conversione
       </a>
     </li>
-    <li class="nav-item">
+    <li>
       <a class="nav-link" routerLink="/storico" routerLinkActive="active">
         <i class="bi bi-calendar3"></i> Storico
+      </a>
+    </li>
+    <li>
+      <a class="nav-link" routerLink="/grafico" routerLinkActive="active">
+        <i class="bi bi-graph-up-arrow"></i> Grafico
       </a>
     </li>
   </ul>
 </nav>
 
-<!-- CONTENUTO PRINCIPALE -->
 <main class="container">
   <router-outlet></router-outlet>
 </main>
 
-<!-- FOOTER -->
 <footer>
   <div class="container">
     <p>
       <i class="bi bi-shield-check"></i>
-      © 2025 CurrencyEx — Tassi di cambio aggiornati ogni ora.
+      &copy; 2025 CurrencyEx &mdash; Powered by <a href="https://www.frankfurter.dev" target="_blank" style="color:rgba(255,255,255,0.6)">Frankfurter API</a>
     </p>
   </div>
 </footer>

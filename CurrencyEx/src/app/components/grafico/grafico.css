@@ -1,0 +1,155 @@
+/* ===== PERIODO BUTTONS ===== */
+.periodo-group {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.btn-periodo {
+  padding: 0.5rem 1.2rem;
+  border-radius: 50px;
+  border: 2px solid #e2e8f0;
+  background: #f8fafc;
+  color: #64748b;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-periodo:hover {
+  border-color: var(--primary, #6366f1);
+  color: var(--primary, #6366f1);
+  background: rgba(99,102,241,0.05);
+}
+
+.btn-periodo.active {
+  background: var(--primary, #6366f1);
+  border-color: var(--primary, #6366f1);
+  color: white;
+  box-shadow: 0 4px 12px rgba(99,102,241,0.3);
+}
+
+/* ===== DATE CUSTOM ===== */
+.date-custom {
+  animation: fadeInDown 0.3s ease-out;
+  background: #f8fafc;
+  border-radius: 12px;
+  padding: 1rem;
+  border: 1.5px dashed #cbd5e1;
+}
+
+/* ===== SPINNER inline ===== */
+.spinner-inline {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255,255,255,0.4);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  vertical-align: middle;
+  margin-right: 4px;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ===== RISULTATI ===== */
+.risultati-wrapper {
+  margin-top: 2rem;
+  animation: fadeInUp 0.4s ease-out;
+}
+
+/* ===== STATS ===== */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.stat-card {
+  background: #f8fafc;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 0.9rem 1rem;
+  text-align: center;
+  transition: all 0.2s ease;
+}
+
+.stat-card:hover {
+  border-color: #6366f1;
+  box-shadow: 0 4px 12px rgba(99,102,241,0.1);
+  transform: translateY(-2px);
+}
+
+.stat-card.positive { border-color: #d1fae5; background: #f0fdf4; }
+.stat-card.negative { border-color: #fee2e2; background: #fef2f2; }
+
+.stat-label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 0.35rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.3rem;
+}
+
+.stat-value {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: #1e293b;
+}
+
+/* ===== CHART HEADER ===== */
+.chart-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.chart-pair {
+  display: flex;
+  align-items: center;
+  font-weight: 600;
+}
+
+.chart-dates {
+  font-size: 0.85rem;
+  color: #94a3b8;
+  font-weight: 500;
+}
+
+/* ===== CHART CANVAS ===== */
+.chart-container {
+  position: relative;
+  height: 320px;
+  background: #fafafa;
+  border-radius: 12px;
+  border: 1.5px solid #e2e8f0;
+  padding: 1rem;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 640px) {
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .chart-container {
+    height: 240px;
+  }
+
+  .periodo-group {
+    justify-content: center;
+  }
+}

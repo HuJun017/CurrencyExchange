@@ -1,35 +1,40 @@
-<!-- storico.component.html -->
+<!-- storico.html -->
 
 <div class="card">
   <div class="card-header">
-    <h2 class="mb-0">
+    <h2>
       <i class="bi bi-clock-history"></i>
       Conversione Storica
     </h2>
   </div>
-  
+
   <div class="card-body">
-    <div class="alert alert-info" role="alert">
+
+    <div class="alert alert-info">
       <i class="bi bi-info-circle-fill"></i>
-      Visualizza i tassi di cambio storici selezionando una data specifica
+      Seleziona una data per visualizzare i tassi di cambio storici ufficiali.
     </div>
 
-    <form (submit)="converti($event)">
-      
+    <!-- Spinner loading -->
+    <div *ngIf="loading" class="loading-overlay">
+      <div class="spinner"></div>
+      <span>Caricamento tassi storici&hellip;</span>
+    </div>
+
+    <form *ngIf="!loading" (submit)="converti($event)">
+
       <!-- Valuta di partenza -->
       <div class="mb-4">
         <label class="form-label">
           <i class="bi bi-cash-coin text-primary"></i>
           Valuta di partenza
         </label>
-        <select 
-          class="form-select form-select-lg" 
-          name="from" 
-          [(ngModel)]="valutaDa" 
+        <select
+          class="form-select form-select-lg"
+          name="from"
+          [(ngModel)]="valutaDa"
           (change)="caricaTassi()">
-          <option *ngFor="let v of valute" [value]="v">
-            {{ v }}
-          </option>
+          <option *ngFor="let v of valute" [value]="v">{{ v }}</option>
         </select>
       </div>
 
@@ -39,13 +44,11 @@
           <i class="bi bi-box-arrow-right text-success"></i>
           Valuta di destinazione
         </label>
-        <select 
-          class="form-select form-select-lg" 
-          name="to" 
+        <select
+          class="form-select form-select-lg"
+          name="to"
           [(ngModel)]="valutaA">
-          <option *ngFor="let v of valute" [value]="v">
-            {{ v }}
-          </option>
+          <option *ngFor="let v of valute" [value]="v">{{ v }}</option>
         </select>
       </div>
 
@@ -55,12 +58,12 @@
           <i class="bi bi-calculator text-info"></i>
           Importo da convertire
         </label>
-        <input 
-          type="number" 
-          class="form-control form-control-lg" 
-          name="amount" 
-          [(ngModel)]="amount" 
-          placeholder="Inserisci l'importo"
+        <input
+          type="number"
+          class="form-control form-control-lg"
+          name="amount"
+          [(ngModel)]="amount"
+          placeholder="Es. 100"
           min="0"
           step="0.01"
           required>
@@ -70,24 +73,25 @@
       <div class="mb-4">
         <label class="form-label">
           <i class="bi bi-calendar-event text-warning"></i>
-          Seleziona data storica
+          Data storica
         </label>
-        <input 
-          type="date" 
-          class="form-control form-control-lg" 
-          name="date" 
-          [(ngModel)]="DataAnno" 
+        <input
+          type="text"
+          appDatepicker
+          appDatepickerMin="1999-01-04"
+          [appDatepickerMax]="oggi"
+          class="form-control form-control-lg"
+          name="date"
+          [(ngModel)]="DataAnno"
           (change)="caricaTassi()"
-          min = "1999-01-04"
-          [max]="oggi"
           required>
-        <small class="form-text text-muted">
+        <small class="form-text text-muted" style="margin-top:0.4rem; display:block;">
           <i class="bi bi-lightbulb"></i>
-          Seleziona una data passata per vedere i tassi di cambio storici
+          I dati sono disponibili dal 4 gennaio 1999.
         </small>
       </div>
 
-      <!-- Bottone conversione -->
+      <!-- Bottone -->
       <div class="d-grid">
         <button type="submit" class="btn btn-primary btn-lg">
           <i class="bi bi-search"></i>
@@ -97,35 +101,32 @@
     </form>
 
     <!-- RISULTATO -->
-    <div *ngIf="risultato !== null" class="result-box">
+    <div *ngIf="risultato !== null && !loading" class="result-box">
       <h3>
         <i class="bi bi-check-circle-fill"></i>
         Risultato Storico
       </h3>
-      <div class="bg-white p-4 rounded-3 border">
-        <div class="row align-items-center">
-          <div class="col-md-5 text-center">
-            <div class="mb-2">
-              <span class="badge bg-primary fs-6">{{ valutaDaStatica }}</span>
-            </div>
+      <div style="background:white; border-radius:12px; border:1.5px solid #d1fae5; padding:1.5rem;">
+        <div class="row align-items-center text-center g-3">
+          <div class="col-5">
+            <span class="badge bg-primary fs-6 mb-2">{{ valutaDaStatica }}</span>
             <div class="result-value">{{ amountStatica }}</div>
           </div>
-          <div class="col-md-2 text-center">
-            <i class="bi bi-arrow-right fs-1 text-primary"></i>
+          <div class="col-2">
+            <i class="bi bi-arrow-right fs-1 text-primary" style="animation: arrowPulse 1.2s ease-in-out infinite;"></i>
           </div>
-          <div class="col-md-5 text-center">
-            <div class="mb-2">
-              <span class="badge bg-success fs-6">{{ valutaAStatica }}</span>
-            </div>
-            <div class="result-value text-success">{{ risultato }}</div>
+          <div class="col-5">
+            <span class="badge bg-success fs-6 mb-2">{{ valutaAStatica }}</span>
+            <div class="result-value text-success">{{ risultato | number:'1.2-2' }}</div>
           </div>
         </div>
-        <hr>
-        <p class="text-center text-muted mb-0">
+        <hr style="border-color:#d1fae5; margin:1.25rem 0 0.9rem;">
+        <p class="text-center text-muted mb-0" style="font-size:0.9rem;">
           <i class="bi bi-calendar-check"></i>
-          Tasso di cambio valido per la data: <strong>{{ DataAnno }}</strong>
+          Tasso valido per: <strong>{{ DataAnno }}</strong>
         </p>
       </div>
     </div>
   </div>
 </div>
+

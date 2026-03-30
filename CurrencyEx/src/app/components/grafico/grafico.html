@@ -1,0 +1,160 @@
+<!-- grafico.html -->
+
+<div class="card">
+  <div class="card-header">
+    <h2>
+      <i class="bi bi-graph-up-arrow"></i>
+      Andamento Storico
+    </h2>
+  </div>
+
+  <div class="card-body">
+
+    <form (submit)="cerca($event)">
+
+      <!-- Coppia di valute -->
+      <div class="row g-3 mb-4">
+        <div class="col-md-5">
+          <label class="form-label">
+            <i class="bi bi-cash-coin text-primary"></i>
+            Valuta di partenza
+          </label>
+          <select class="form-select form-select-lg" name="from" [(ngModel)]="valutaDa">
+            <option *ngFor="let v of valute" [value]="v">{{ v }}</option>
+          </select>
+        </div>
+
+        <div class="col-md-2 d-flex align-items-end justify-content-center pb-1">
+          <i class="bi bi-arrow-left-right fs-3 text-primary" style="opacity:0.5;"></i>
+        </div>
+
+        <div class="col-md-5">
+          <label class="form-label">
+            <i class="bi bi-box-arrow-right text-success"></i>
+            Valuta di arrivo
+          </label>
+          <select class="form-select form-select-lg" name="to" [(ngModel)]="valutaA">
+            <option *ngFor="let v of valute" [value]="v" [disabled]="v === valutaDa">{{ v }}</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Selezione periodo -->
+      <div class="mb-4">
+        <label class="form-label">
+          <i class="bi bi-calendar-range text-warning"></i>
+          Periodo
+        </label>
+        <div class="periodo-group">
+          <button
+            *ngFor="let p of periodi"
+            type="button"
+            class="btn-periodo"
+            [class.active]="periodo === p.value"
+            (click)="periodo = p.value; onPeriodoChange()">
+            {{ p.label }}
+          </button>
+        </div>
+      </div>
+
+      <!-- Date personalizzate -->
+      <div *ngIf="periodo === 'custom'" class="row g-3 mb-4 date-custom">
+        <div class="col-md-6">
+          <label class="form-label">
+            <i class="bi bi-calendar-event"></i>
+            Data inizio
+          </label>
+          <input type="date" appDatepicker
+            appDatepickerMin="1999-01-04"
+            [appDatepickerMax]="dataFine"
+            class="form-control form-control-lg"
+            name="dataInizio" [(ngModel)]="dataInizio">
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">
+            <i class="bi bi-calendar-event"></i>
+            Data fine
+          </label>
+          <input type="date" appDatepicker
+            [appDatepickerMin]="dataInizio"
+            [appDatepickerMax]="oggi"
+            class="form-control form-control-lg"
+            name="dataFine" [(ngModel)]="dataFine">
+        </div>
+      </div>
+
+      <!-- Submit -->
+      <div class="d-grid">
+        <button type="submit" class="btn btn-primary btn-lg" [disabled]="loading || valutaDa === valutaA">
+          <span *ngIf="!loading">
+            <i class="bi bi-bar-chart-line"></i>
+            Genera Grafico
+          </span>
+          <span *ngIf="loading">
+            <span class="spinner-inline"></span>
+            Caricamento&hellip;
+          </span>
+        </button>
+      </div>
+
+    </form>
+
+    <!-- Errore -->
+    <div *ngIf="errore" class="alert alert-danger mt-4" style="border-left:4px solid #ef4444; background:#fef2f2; color:#991b1b;">
+      <i class="bi bi-exclamation-triangle-fill"></i>
+      Errore nel recupero dei dati. Controlla le date selezionate e riprova.
+    </div>
+
+    <!-- Spinner centrato -->
+    <div *ngIf="loading" class="loading-overlay" style="margin-top:2rem;">
+      <div class="spinner"></div>
+      <span>Recupero serie storica&hellip;</span>
+    </div>
+
+    <!-- Statistiche + Grafico -->
+    <div *ngIf="!loading && lastRate !== null" class="risultati-wrapper">
+
+      <!-- Statistiche -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-label"><i class="bi bi-arrow-up-right text-success"></i> Massimo</div>
+          <div class="stat-value text-success">{{ maxRate?.toFixed(4) }}</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label"><i class="bi bi-arrow-down-right text-danger"></i> Minimo</div>
+          <div class="stat-value text-danger">{{ minRate?.toFixed(4) }}</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label"><i class="bi bi-calculator text-primary"></i> Media</div>
+          <div class="stat-value">{{ avgRate?.toFixed(4) }}</div>
+        </div>
+        <div class="stat-card" [class.positive]="variazione! >= 0" [class.negative]="variazione! < 0">
+          <div class="stat-label">
+            <i class="bi" [ngClass]="variazione! >= 0 ? 'bi-trending-up text-success' : 'bi-trending-down text-danger'"></i>
+            Variazione
+          </div>
+          <div class="stat-value" [class.text-success]="variazione! >= 0" [class.text-danger]="variazione! < 0">
+            {{ variazione! >= 0 ? '+' : '' }}{{ variazione?.toFixed(2) }}%
+          </div>
+        </div>
+      </div>
+
+      <!-- Titolo grafico -->
+      <div class="chart-header">
+        <span class="chart-pair">
+          <span class="badge bg-primary">{{ cercatoValutaDa }}</span>
+          <i class="bi bi-arrow-right mx-2"></i>
+          <span class="badge bg-success">{{ cercatoValutaA }}</span>
+        </span>
+        <span class="chart-dates">{{ dataInizio }} &mdash; {{ dataFine }}</span>
+      </div>
+
+      <!-- Canvas grafico -->
+      <div class="chart-container">
+        <canvas #chartCanvas></canvas>
+      </div>
+
+    </div>
+
+  </div>
+</div>

@@ -23,6 +23,7 @@ export class Conversion {
   amount = 1;
 
   risultato: any = null;
+  loading = false;
 
   amountStatica: number | null = null;
   valutaDaStatica: string | null = null;
@@ -84,21 +85,21 @@ export class Conversion {
     }
 
     // Carica i tassi e poi calcola
+    this.loading = true;
     this.conversionService.getConversion(this.valutaDa, this.valutaA)
-      .subscribe(risposta => {
-        const tassi = risposta.rates;
-        console.log("Tassi ricevuti:", tassi);
-
-        this.risultato = this.valutaA.map(val => ({
-          valuta: val,
-          valore: this.amount * tassi[val]
-        }));
-
-        console.log("Risultato finale:", this.risultato);
-
-        this.amountStatica = this.amount;
-        this.valutaDaStatica = this.valutaDa;
-        this.valutaAStatica = [...this.valutaA];
+      .subscribe({
+        next: risposta => {
+          const tassi = risposta.rates;
+          this.risultato = this.valutaA.map(val => ({
+            valuta: val,
+            valore: this.amount * tassi[val]
+          }));
+          this.amountStatica = this.amount;
+          this.valutaDaStatica = this.valutaDa;
+          this.valutaAStatica = [...this.valutaA];
+          this.loading = false;
+        },
+        error: () => { this.loading = false; }
       });
   }
 }

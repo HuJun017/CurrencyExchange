@@ -2,10 +2,11 @@ import { CommonModule } from '@angular/common';
 import { StoricoService } from '../../services/storico-service/storico-service';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { DatepickerDirective } from '../../directives/datepicker.directive';
 
 @Component({
   selector: 'app-storico',
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, DatepickerDirective],
   templateUrl: './storico.html',
   styleUrl: './storico.css',
 })
@@ -25,8 +26,9 @@ export class Storico {
   DataAnno: string = new Date().toISOString().split('T')[0];
 
 
-  tassi: any = {};     
-  risultato: any = null; // risultato finale
+  tassi: any = {};
+  risultato: any = null;
+  loading = false;
 
 
   //valute convertite
@@ -43,11 +45,12 @@ export class Storico {
   }
 
   caricaTassi() {
-  this.storicoService.getConversion(this.valutaDa, this.DataAnno ?? '')
-    .subscribe({
-      next: risposta => this.tassi = risposta.rates,
-      error: err => console.error("Errore tassi", err)
-    });
+    this.loading = true;
+    this.storicoService.getConversion(this.valutaDa, this.DataAnno ?? '')
+      .subscribe({
+        next: risposta => { this.tassi = risposta.rates; this.loading = false; },
+        error: err => { console.error("Errore tassi", err); this.loading = false; }
+      });
   }
 
 converti(event: Event) {
