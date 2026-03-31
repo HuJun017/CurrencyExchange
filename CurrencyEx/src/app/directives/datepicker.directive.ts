@@ -22,6 +22,7 @@ export class DatepickerDirective implements AfterViewInit, OnDestroy, OnChanges 
       locale: Italian,
       allowInput: true,
       disableMobile: true,
+      monthSelectorType: 'static',
       appendTo: document.body,
       minDate: this.appDatepickerMin ?? (this.el.nativeElement.min || undefined),
       maxDate: this.appDatepickerMax ?? (this.el.nativeElement.max || undefined),
